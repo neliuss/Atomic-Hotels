@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JdbcEntitySetup xmlns="http://www.ontimize.com/schema/jdbc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ontimize.com/schema/jdbc http://www.ontimize.com/schema/jdbc/ontimize-jdbc-dao.xsd" catalog="" schema="${mainschema}" table="rooms" datasource="mainDataSource" sqlhandler="dbSQLStatementHandler">
+	<DeleteKeys>
+		<Column>rm_id</Column>
+	</DeleteKeys>
+	<UpdateKeys>
+		<Column>rm_id</Column>
+	</UpdateKeys>
+	<GeneratedKey>rm_id</GeneratedKey>
+	<Queries>
+		<Query id="queryEnabledRooms">
+			<Sentence>
+				<![CDATA[
+					     SELECT
+					      #COLUMNS#
+					     FROM
+					      rooms
+					     LEFT JOIN room_types ON rm_rmt_id = rmt_id
+					     WHERE 
+					     rm_status != 0
+					     #WHERE_CONCAT#
+					   ]]>
+			</Sentence>
+		</Query>
+		<Query id="queryExampledRooms">
+			<Sentence>
+				<![CDATA[
+					     SELECT
+					      #COLUMNS#
+					     FROM
+					      rooms
+					     LEFT JOIN room_types ON rm_rmt_id = rmt_id
+					     LEFT JOIN hotels ON rm_htl_id = htl_id
+					     WHERE 
+					     rm_status != 0
+					     AND rm_id not in (
+					     	SELECT DISTINCT bkg_rm_id 
+					     	FROM bookings
+					     	#WHERE# 
+					     )					     					     
+					   ]]>
+			</Sentence>
+		</Query>
+		<Query id="queryInfoRooms">
+			<Sentence>
+				<![CDATA[
+					     SELECT
+					      #COLUMNS#
+					     FROM
+					      rooms
+					     LEFT JOIN room_types ON rm_rmt_id = rmt_id
+					     LEFT JOIN hotels ON rm_htl_id = htl_id
+					     LEFT JOIN beds_combo ON rmt_bdc_id = bdc_id
+					     WHERE 
+					     rm_status != 0
+					     #WHERE_CONCAT#
+					   ]]>
+			</Sentence>
+		</Query>
+		<Query id="queryInfoFullRooms">
+			<Sentence>
+				<![CDATA[
+					     SELECT
+					      #COLUMNS#
+					     FROM
+					      rooms
+					     LEFT JOIN room_types ON rm_rmt_id = rmt_id
+					     LEFT JOIN hotels ON rm_htl_id = htl_id	
+					     #WHERE#
+					   ]]>
+			</Sentence>
+		</Query>
+		<Query id="queryHotelFeaturesTypes">
+			<Sentence>
+				<![CDATA[
+				    SELECT
+				     	#COLUMNS#
+				    FROM
+				     	rooms
+				    LEFT JOIN hotels ON htl_id = rm_htl_id
+				    LEFT JOIN room_types_features ON rmt_id= rm_rmt_id
+				    LEFT JOIN room_types ON rmt_bdc_id= rm_rmt_id
+				    LEFT JOIN features USING (ftr_id)
+				    #WHERE#
+			    ]]>
+			</Sentence>
+		</Query>
+	</Queries>
+</JdbcEntitySetup>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JdbcEntitySetup
+	xmlns="http://www.ontimize.com/schema/jdbc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ontimize.com/schema/jdbc http://www.ontimize.com/schema/jdbc/ontimize-jdbc-dao.xsd"
+	catalog="" schema="${mainschema}" table="bookings_services_extra"
+	datasource="mainDataSource" sqlhandler="dbSQLStatementHandler">
+	<DeleteKeys>
+		<Column>bsx_id</Column>
+	</DeleteKeys>
+	<UpdateKeys>
+		<Column>bsx_id</Column>
+	</UpdateKeys>
+		<GeneratedKey>bsx_id</GeneratedKey>
+		 <Queries>
+		  <Query id="default">
+   <Sentence>
+   <![CDATA[
+		SELECT 
+		#COLUMNS#
+		FROM bookings_services_extra bse 
+		LEFT JOIN bookings ON bsx_bkg_id = bkg_id 		
+		LEFT JOIN rooms ON rm_id = bkg_rm_id			
+		#WHERE#
+   ]]>
+   </Sentence>
+  </Query>
+  <Query id="booking_inprocess">
+   <Sentence>
+   <![CDATA[
+		SELECT 
+		#COLUMNS#
+		FROM bookings_services_extra bse 
+		INNER JOIN bookings b ON bse.bsx_bkg_id = b.bkg_id 
+		WHERE b.bkg_canceled != null OR bse.bsx_date >= b.bkg_checkin 
+		AND b.bkg_checkout is not NULLs
+   ]]>
+   </Sentence>
+  </Query>
+  <Query id="queryServciosExtraPrecioUnidadesTotal">
+   <Sentence>
+   <![CDATA[
+     SELECT bsx_bkg_id, bsx_units, bsx_precio,(bsx_units*bsx_precio) AS total
+     FROM public.bookings_services_extra
+     #WHERE#
+   ]]>
+   </Sentence>
+  </Query>
+  <Query id="queryServiciosExtraNombreDescripcionUnidadesPrecioFecha">
+   <Sentence>
+   <![CDATA[
+     SELECT sxt_name, sxt_description, bsx_units, bsx_precio, bsx_date  
+     FROM bookings_services_extra LEFT JOIN servicesxtra ON bsx_sxt_id =sxt_id
+     #WHERE#
+   ]]>
+   </Sentence>
+  </Query>
+ </Queries>		
+</JdbcEntitySetup>

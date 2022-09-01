@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JdbcEntitySetup xmlns="http://www.ontimize.com/schema/jdbc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.ontimize.com/schema/jdbc http://www.ontimize.com/schema/jdbc/ontimize-jdbc-dao.xsd" 
+catalog="" schema="${mainschema}" table="bookings_guests" datasource="mainDataSource" sqlhandler="dbSQLStatementHandler">
+	<DeleteKeys>
+		<Column>bgs_id</Column>
+	</DeleteKeys>
+	<UpdateKeys>
+		<Column>bgs_id</Column>
+	</UpdateKeys>
+	<GeneratedKey>bgs_id</GeneratedKey>	
+	<Queries>
+		<Query id="default">
+			<Sentence>
+				<![CDATA[
+				    SELECT
+				     	#COLUMNS#
+				    FROM
+				     	bookings_guests				   	
+				   	LEFT JOIN bookings ON bgs_bkg_id = bkg_id
+				   	LEFT JOIN rooms ON rm_id = bkg_rm_id				   						  
+				    #WHERE#				    
+			    ]]>
+			</Sentence>
+		</Query>		
+		<Query id="queryGuestCount">
+			<Sentence>
+				<![CDATA[
+				  SELECT 
+				  COUNT(bgs_cst_id) AS total_guests
+				  FROM bookings_guests
+				  #WHERE#
+			    ]]>
+			</Sentence>
+		</Query>
+		<Query id="queryBookingGuestsInfo">
+			<Sentence>
+				<![CDATA[
+				    SELECT
+				      cst_name, cst_surname, cst_identity_document, rm_htl_id
+				    FROM
+				    bookings_guests
+				    LEFT JOIN customers ON cst_id = bgs_cst_id
+				    LEFT JOIN bookings ON bgs_bkg_id = bkg_id
+				   	LEFT JOIN rooms ON rm_id = bkg_rm_id			    					    		
+				    #WHERE#			   
+			    ]]>
+			</Sentence>
+		</Query>
+	</Queries>		
+</JdbcEntitySetup>

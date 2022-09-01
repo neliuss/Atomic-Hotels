@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JdbcEntitySetup xmlns="http://www.ontimize.com/schema/jdbc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ontimize.com/schema/jdbc http://www.ontimize.com/schema/jdbc/ontimize-jdbc-dao.xsd" catalog="" schema="${mainschema}" table="room_types" datasource="mainDataSource" sqlhandler="dbSQLStatementHandler">
+	<DeleteKeys>
+		<Column>rmt_id</Column>
+	</DeleteKeys>
+	<UpdateKeys>
+		<Column>rmt_id</Column>
+	</UpdateKeys>
+	<GeneratedKey>rmt_id</GeneratedKey>
+	<Queries>
+		<Query id="queryRoomTypes">
+			<Sentence>
+				<![CDATA[
+				    SELECT
+				     	#COLUMNS#
+				    FROM
+				     	room_types
+			     	JOIN beds_combo ON bdc_id = rmt_bdc_id
+				    #WHERE#
+			    ]]>
+			</Sentence>
+		</Query>
+		<Query id="queryRoomFeaturesTypes">
+			<Sentence>
+				<![CDATA[
+				    SELECT
+				     	#COLUMNS#
+				    FROM
+				     	room_types
+				    LEFT JOIN room_types_features USING(rmt_id)
+				    LEFT JOIN features USING(ftr_id)
+				    #WHERE#
+			    ]]>
+			</Sentence>
+		</Query>
+	</Queries>
+</JdbcEntitySetup>

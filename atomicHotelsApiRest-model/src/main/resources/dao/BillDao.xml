@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JdbcEntitySetup
+	xmlns="http://www.ontimize.com/schema/jdbc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ontimize.com/schema/jdbc http://www.ontimize.com/schema/jdbc/ontimize-jdbc-dao.xsd"
+	catalog="" schema="${mainschema}" table="bills"
+	datasource="mainDataSource" sqlhandler="dbSQLStatementHandler">
+	<DeleteKeys>
+		<Column>bll_id</Column>
+	</DeleteKeys>
+	<UpdateKeys>
+		<Column>bll_id</Column>
+	</UpdateKeys>
+		<GeneratedKey>bll_id</GeneratedKey>
+	<Queries>
+		<Query id="anidado">
+			<Sentence>
+				<![CDATA[
+				   	 SELECT
+				     	#COLUMNS#
+				    FROM
+				     	bills
+				   	JOIN departments ON dpt_id = bll_dpt_id
+				   	JOIN hotels ON htl_id = bll_htl_id        				    					    		
+				    #WHERE#				    
+			    ]]>
+			</Sentence>
+		</Query>
+			
+	
+	<Query id="billsByHotelDep">
+		<Sentence>
+			<![CDATA[
+		  		SELECT
+				     	htl_name, htl_city,bll_id, bll_concept, bll_date, bll_amount, dpt_name
+				    FROM
+				     	hotels
+				     LEFT JOIN bills ON bll_htl_id = htl_id 
+				     JOIN departments ON dpt_id = bll_dpt_id			    					    		
+				    #WHERE#	
+			]]>
+		</Sentence>
+  	</Query>
+  	</Queries>
+</JdbcEntitySetup>
